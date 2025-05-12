@@ -5,8 +5,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-import Logging
-
 /// Use this to turn SDK logging on.
 public actor SDKLoggingSystem {
     private var isInitialized = false
@@ -34,14 +32,6 @@ public actor SDKLoggingSystem {
     ///     - logLevel: The minimum log level to use for the log handler if no custom log handler factory was found. Default is `.error`.
     public func initialize(defaultLogLevel: SDKLogLevel = .error) async {
         if isInitialized { return } else { isInitialized = true }
-        LoggingSystem.bootstrap { [logHandlerFactories] label in
-            if let factory = logHandlerFactories[label] {
-                return factory.construct(label: label)
-            }
-            var handler = StreamLogHandler.standardOutput(label: label)
-            handler.logLevel = defaultLogLevel.toLoggerType()
-            return handler
-        }
     }
 
     public func initialize(logLevel: SDKLogLevel) async {
